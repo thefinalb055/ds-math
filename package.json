@@ -1,0 +1,34 @@
+{
+	"name": "ds-library",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/thefinalboss/ds-math.git",
+	"author": "TheFinalBoss <boss@abuusama.dev>",
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"lint": "aztec-nargo fmt",
+		"clean": "rm -rf ./src/artifacts ./target ./dist",
+		"clear-store": "rm -rf ./store",
+		"codegen": "aztec codegen target --outdir src/artifacts",
+		"compile": "${AZTEC_NARGO:-aztec-nargo} compile && aztec-postprocess-contract",
+		"test": "aztec test",
+		"build": "tsdown",
+		"update": "aztec update --contract . && ./.github/scripts/update_contract.sh $(grep -oP 'tag\\s*=\\s*\"\\K[^\"]+' \"Nargo.toml\" | head -1) && bun install && bun update-readme-version",
+		"update-readme-version": "bun run ./.github/scripts/update-readme-version.js"
+	},
+	"dependencies": {
+		"@aztec/accounts": "2.0.2",
+		"@aztec/aztec.js": "2.0.2",
+		"@aztec/noir-contracts.js": "2.0.2",
+		"@aztec/protocol-contracts": "2.0.2",
+		"@aztec/pxe": "2.0.2",
+		"@aztec/stdlib": "2.0.2"
+	},
+	"devDependencies": {
+		"lefthook": "^1.13.4",
+		"lint-staged": "^16.2.0"
+	},
+	"packageManager": "bun@1.2.20"
+}

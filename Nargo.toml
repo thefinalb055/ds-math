@@ -1,0 +1,6 @@
+[package]
+name = "math"
+type = "lib"
+authors = [""]
+
+[dependencies]
