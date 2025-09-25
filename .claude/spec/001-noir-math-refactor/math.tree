@@ -1,0 +1,164 @@
+// Generated from Noir Math Library Specification
+// Fixed-point arithmetic library for DeFi operations
+
+Math::add
+├── When y is positive
+│   ├── When x + y does not overflow
+│   │   └── It should return x + y
+│   └── When x + y would overflow U128_MAX
+│       └── It should revert with "overflow"
+├── When y is negative
+│   ├── When x >= |y|
+│   │   └── It should return x - |y|
+│   └── When x < |y|
+│       └── It should revert with "underflow"
+└── When y is zero
+    └── It should return x unchanged
+
+Math::sub
+├── When y is positive
+│   ├── When x >= y
+│   │   └── It should return x - y
+│   └── When x < y
+│       └── It should revert with "underflow"
+├── When y is negative
+│   ├── When x + |y| does not overflow
+│   │   └── It should return x + |y|
+│   └── When x + |y| would overflow U128_MAX
+│       └── It should revert with "overflow"
+└── When y is zero
+    └── It should return x unchanged
+
+Math::mul
+├── When y is zero
+│   └── It should return 0
+├── When x exceeds I64_MAX
+│   └── It should revert with "x > max int128"
+├── When y equals I64_MIN
+│   ├── When x is zero
+│   │   └── It should return 0
+│   ├── When x * (I64_MAX + 1) does not overflow
+│   │   └── It should return -(x * (I64_MAX + 1))
+│   └── When x * (I64_MAX + 1) would overflow
+│       └── It should revert with "mul overflow"
+├── When y is positive
+│   ├── When x * y does not overflow I64_MAX
+│   │   └── It should return x * y as i64
+│   └── When x * y would overflow I64_MAX
+│       └── It should revert with "mul overflow"
+└── When y is negative
+    ├── When x * |y| does not overflow I64_MAX + 1
+    │   └── It should return -(x * |y|) as i64
+    └── When x * |y| would overflow I64_MAX + 1
+        └── It should revert with "mul overflow"
+
+Math::min
+├── When x equals y
+│   └── It should return x
+├── When x is less than y
+│   └── It should return x
+└── When x is greater than y
+    └── It should return y
+
+Math::max
+├── When x equals y
+│   └── It should return x
+├── When x is greater than y
+│   └── It should return x
+└── When x is less than y
+    └── It should return y
+
+Math::diff
+├── When x equals y
+│   └── It should return 0
+├── When x is greater than y
+│   ├── When difference fits in I64_MAX
+│   │   └── It should return (x - y) as i64
+│   └── When difference exceeds I64_MAX
+│       └── It should revert with "diff overflow"
+└── When x is less than y
+    ├── When difference magnitude fits in I64_MIN
+    │   └── It should return -(y - x) as i64
+    └── When difference magnitude exceeds I64_MIN
+        └── It should revert with "diff overflow"
+
+Math::to_rad
+├── When wad is zero
+│   └── It should return 0 as Field
+├── When wad * 10^27 does not overflow Field
+│   └── It should return wad * 10^27 as Field
+└── When wad * 10^27 would overflow Field
+    └── It should revert with "to_rad overflow"
+
+Math::wmul
+├── When either x or y is zero
+│   └── It should return 0
+├── When x * y / WAD does not overflow
+│   ├── When result rounds down
+│   │   └── It should return (x * y) / WAD
+│   └── When result is exact
+│       └── It should return (x * y) / WAD
+└── When x * y would overflow U128_MAX
+    └── It should revert with "wmul overflow"
+
+Math::wdiv
+├── When y is zero
+│   └── It should revert with "division by zero"
+├── When x is zero
+│   └── It should return 0
+├── When x * WAD / y does not overflow
+│   ├── When result rounds down
+│   │   └── It should return (x * WAD) / y
+│   └── When result is exact
+│       └── It should return (x * WAD) / y
+└── When x * WAD would overflow U128_MAX
+    └── It should revert with "wdiv overflow"
+
+Math::rmul
+├── When either x or y is zero
+│   └── It should return 0
+├── When x * y / RAY does not overflow
+│   ├── When result rounds down
+│   │   └── It should return (x * y) / RAY
+│   └── When result is exact
+│       └── It should return (x * y) / RAY
+└── When x * y would overflow U128_MAX
+    └── It should revert with "rmul overflow"
+
+Math::rdiv
+├── When y is zero
+│   └── It should revert with "division by zero"
+├── When x is zero
+│   └── It should return 0
+├── When x * RAY / y does not overflow
+│   ├── When result rounds down
+│   │   └── It should return (x * RAY) / y
+│   └── When result is exact
+│       └── It should return (x * RAY) / y
+└── When x * RAY would overflow U128_MAX
+    └── It should revert with "rdiv overflow"
+
+Math::rpow
+├── When n is 0
+│   └── It should return base (representing 1)
+├── When n is 1
+│   └── It should return x
+├── When x is 0
+│   └── It should return 0
+├── When x is base (representing 1)
+│   └── It should return base
+└── When computing x^n
+    ├── When using binary exponentiation
+    │   ├── When intermediate results do not overflow
+    │   │   └── It should return x^n with base precision
+    │   └── When intermediate results would overflow
+    │       └── It should revert with "rpow overflow"
+    └── When result needs rounding
+        └── It should round down to nearest integer
+
+MathInvariants
+├── It should maintain overflow protection across all operations
+├── It should preserve precision in WAD/RAY/RAD conversions
+├── It should enforce commutative property for min and max
+├── It should prevent division by zero in wdiv and rdiv
+└── It should handle I64_MIN edge case correctly in mul
