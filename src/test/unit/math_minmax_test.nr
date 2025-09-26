@@ -30,9 +30,7 @@
 //     `-- When difference magnitude exceeds |I64_MIN|
 //         `-- It should revert with "diff overflow"
 
-use crate::{min, max};
-// TODO: Import diff once implemented
-// use crate::diff;
+use crate::{min, max, diff};
 
 // ============ Helper Functions for Branch Conditions ============
 
@@ -161,42 +159,37 @@ fn test_max_x_less() {
 #[test]
 fn test_diff_equal() {
     // Branch: Math::diff -> When x equals y -> It should return 0
-    // TODO: Implement once diff is available
-    // let (x, y) = helpers::setup_diff_equal();
-    // let result = diff(x, y);
-    // assert_eq(result, 0);
+    let (x, y) = helpers::setup_diff_equal();
+    let result = diff(x, y);
+    assert_eq(result, 0);
 }
 
 #[test]
 fn test_diff_x_greater_no_overflow() {
     // Branch: Math::diff -> When x is greater than y -> When difference fits in I64_MAX -> It should return x - y
-    // TODO: Implement once diff is available
-    // let (x, y) = helpers::setup_diff_x_greater_no_overflow();
-    // let result = diff(x, y);
-    // assert_eq(result, 50);
+    let (x, y) = helpers::setup_diff_x_greater_no_overflow();
+    let result = diff(x, y);
+    assert_eq(result, (helpers::TEST_BASE_VALUE() - helpers::TEST_SMALL_VALUE()) as i64);
 }
 
 #[test(should_fail_with = "diff overflow")]
 fn test_diff_x_greater_overflow() {
     // Branch: Math::diff -> When x is greater than y -> When difference exceeds I64_MAX -> It should revert
-    // TODO: Implement once diff is available
-    // let (x, y) = helpers::setup_diff_x_greater_overflow();
-    // let _result = diff(x, y);
+    let (x, y) = helpers::setup_diff_x_greater_overflow();
+    let _result = diff(x, y);
 }
 
 #[test]
 fn test_diff_x_less_no_overflow() {
     // Branch: Math::diff -> When x is less than y -> When difference magnitude fits -> It should return x - y
-    // TODO: Implement once diff is available
-    // let (x, y) = helpers::setup_diff_x_less_no_overflow();
-    // let result = diff(x, y);
-    // assert_eq(result, -50);
+    let (x, y) = helpers::setup_diff_x_less_no_overflow();
+    let result = diff(x, y);
+    assert_eq(result, (helpers::TEST_SMALL_VALUE() as i64) - (helpers::TEST_BASE_VALUE() as i64));
 }
 
 #[test(should_fail_with = "diff overflow")]
 fn test_diff_x_less_overflow() {
     // Branch: Math::diff -> When x is less than y -> When difference magnitude exceeds |I64_MIN| -> It should revert
-    // TODO: Implement once diff is available
-    // let (x, y) = helpers::setup_diff_x_less_overflow();
-    // let _result = diff(x, y);
+    let (x, y) = helpers::setup_diff_x_less_overflow();
+    let _result = diff(x, y);
 }

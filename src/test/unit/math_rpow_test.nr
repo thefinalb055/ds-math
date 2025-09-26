@@ -27,8 +27,8 @@
 //         `-- It should handle correctly
 
 
-// TODO: Import function once implemented
-// use crate::rpow;
+use crate::{rpow, RAY};
+use crate::test::utils::approx_eq;
 
 // ============ Helper Functions for Branch Conditions ============
 
@@ -91,37 +91,33 @@ mod helpers {
 #[test]
 fn test_rpow_n_zero() {
     // Branch: Math::rpow -> When n is 0 -> It should return base
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_n_zero();
-    // let result = rpow(x, n, base);
-    // assert_eq(result, base); // Should return 1 in RAY precision
+    let (x, n, base) = helpers::setup_n_zero();
+    let result = rpow(x, n, base);
+    assert_eq(result, base); // Should return 1 in RAY precision
 }
 
 #[test]
 fn test_rpow_n_one() {
     // Branch: Math::rpow -> When n is 1 -> It should return x unchanged
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_n_one();
-    // let result = rpow(x, n, base);
-    // assert_eq(result, x);
+    let (x, n, base) = helpers::setup_n_one();
+    let result = rpow(x, n, base);
+    assert_eq(result, x);
 }
 
 #[test]
 fn test_rpow_x_zero() {
     // Branch: Math::rpow -> When x is 0 -> When n > 0 -> It should return 0
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_x_zero();
-    // let result = rpow(x, n, base);
-    // assert_eq(result, 0);
+    let (x, n, base) = helpers::setup_x_zero();
+    let result = rpow(x, n, base);
+    assert_eq(result, 0);
 }
 
 #[test]
 fn test_rpow_x_is_base() {
     // Branch: Math::rpow -> When x is base (representing 1) -> It should return base
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_x_is_base();
-    // let result = rpow(x, n, base);
-    // assert_eq(result, RAY); // 1^100 = 1
+    let (x, n, base) = helpers::setup_x_is_base();
+    let result = rpow(x, n, base);
+    assert_eq(result, RAY); // 1^100 = 1
 }
 
 // ============ Binary Exponentiation tests ============
@@ -129,27 +125,28 @@ fn test_rpow_x_is_base() {
 #[test]
 fn test_rpow_binary_exp_no_overflow() {
     // Branch: Math::rpow -> When performing binary exponentiation -> When result does not overflow -> It should return the result
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_binary_exp_no_overflow();
-    // let result = rpow(x, n, base);
-    // Should be approximately 1.21 * RAY
+    let (x, n, base) = helpers::setup_binary_exp_no_overflow();
+    let result = rpow(x, n, base);
+
+    let expected: u128 = 1_210_000_000_000_000_000_000_000_000;
+    assert_eq(result, expected); // 1.1^2 = 1.21
 }
 
 #[test(should_fail_with = "rpow overflow")]
 fn test_rpow_binary_exp_overflow() {
     // Branch: Math::rpow -> When performing binary exponentiation -> When result would overflow -> It should revert
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_binary_exp_overflow();
-    // let _result = rpow(x, n, base);
+    let (x, n, base) = helpers::setup_binary_exp_overflow();
+    let _result = rpow(x, n, base);
 }
 
 #[test]
 fn test_rpow_rounding() {
     // Branch: Math::rpow -> When performing binary exponentiation -> When result needs rounding -> It should round down
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_rounding();
-    // let result = rpow(x, n, base);
-    // 1.5^3 = 3.375, should round down
+    let (x, n, base) = helpers::setup_rounding();
+    let result = rpow(x, n, base);
+
+    let expected: u128 = 3_375_000_000_000_000_000_000_000_000;
+    assert_eq(result, expected); // 1.5^3 = 3.375 -> stays within u128
 }
 
 // ============ Edge Cases ============
@@ -157,8 +154,12 @@ fn test_rpow_rounding() {
 #[test]
 fn test_rpow_large_exponent() {
     // Branch: Math::rpow -> Edge cases -> When exponent is very large -> It should compute correctly or overflow
-    // TODO: Implement once rpow is available
-    // let (x, n, base) = helpers::setup_large_exponent();
-    // let result = rpow(x, n, base);
-    // 1.001^1000 is approximately 2.717
+    let (x, n, base) = helpers::setup_large_exponent();
+    let result = rpow(x, n, base);
+
+    let expected: u128 = 2_716_923_932_235_892_457_383_088_084;
+    let tolerance: u128 = 10; // Allow minimal rounding drift
+
+    assert(approx_eq(result, expected, tolerance));
+    assert(result > base); // Sanity: growth over base
 }
