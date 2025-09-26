@@ -35,7 +35,7 @@ pub fn min_i64() -> i64 {
 }
 
 pub fn i64_min_abs() -> u128 {
-    9223372036854775808  // abs(I64_MIN)
+    (I64_MAX as u128) + 1  // abs(I64_MIN)
 }
 
 // Helper to create WAD-scaled values
@@ -46,6 +46,18 @@ pub fn wad(value: u128) -> u128 {
 // Helper to create RAY-scaled values
 pub fn ray(value: u128) -> u128 {
     value * RAY
+}
+
+pub fn wad_ratio(numerator: u128, denominator: u128) -> u128 {
+    (WAD * numerator) / denominator
+}
+
+pub fn ray_ratio(numerator: u128, denominator: u128) -> u128 {
+    (RAY * numerator) / denominator
+}
+
+pub fn ray_fraction(numerator: u128, denominator: u128) -> u128 {
+    ray_ratio(numerator, denominator)
 }
 
 // Helper to check if two values are approximately equal (for precision tests)

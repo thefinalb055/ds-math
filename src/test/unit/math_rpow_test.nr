@@ -34,6 +34,7 @@ use crate::test::utils::approx_eq;
 
 mod helpers {
     use crate::RAY;
+    use crate::test::utils::ray_ratio;
 
     // Test constants to avoid magic numbers
     pub fn TEST_EXPONENT_SMALL() -> u128 { 2 }
@@ -41,9 +42,9 @@ mod helpers {
     pub fn TEST_EXPONENT_LARGE() -> u128 { 100 }
     pub fn TEST_EXPONENT_HUGE() -> u128 { 200 }
     pub fn TEST_EXPONENT_VERY_LARGE() -> u128 { 1000 }
-    pub fn RAY_ONE_POINT_ONE() -> u128 { RAY + (RAY / 10) }  // 1.1 in RAY
-    pub fn RAY_ONE_POINT_FIVE() -> u128 { RAY + (RAY / 2) }  // 1.5 in RAY
-    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 { RAY + (RAY / 1000) }  // 1.001 in RAY
+    pub fn RAY_ONE_POINT_ONE() -> u128 { ray_ratio(11, 10) }  // 1.1 in RAY
+    pub fn RAY_ONE_POINT_FIVE() -> u128 { ray_ratio(3, 2) }  // 1.5 in RAY
+    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 { ray_ratio(1001, 1000) }  // 1.001 in RAY
 
     // Setup for when n is 0
     pub fn setup_n_zero() -> (u128, u128, u128) {

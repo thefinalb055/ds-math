@@ -43,15 +43,15 @@ use crate::{WAD, RAY, RAD, wmul, wdiv, rmul, rdiv, to_rad};
 
 mod helpers {
     use crate::{WAD, RAY};
-    use crate::test::utils::max_u128;
+    use crate::test::utils::{max_u128, wad_ratio, ray_ratio};
 
     // Test constants to avoid magic numbers
     pub fn TEST_VALUE() -> u128 { 12345 }
     pub fn TEST_VALUE_SMALL() -> u128 { 2 }
-    pub fn WAD_ONE_POINT_FIVE() -> u128 { WAD + (WAD / 2) }  // 1.5 in WAD
-    pub fn WAD_ONE_POINT_THREE() -> u128 { (WAD * 4) / 3 }  // 1.333... in WAD
-    pub fn WAD_TWO() -> u128 { WAD * 2 }  // 2.0 in WAD
-    pub fn RAY_ONE_POINT_ONE() -> u128 { RAY + (RAY / 10) }  // 1.1 in RAY
+    pub fn WAD_ONE_POINT_FIVE() -> u128 { wad_ratio(3, 2) }  // 1.5 in WAD
+    pub fn WAD_ONE_POINT_THREE() -> u128 { wad_ratio(4, 3) }  // 1.333... in WAD
+    pub fn WAD_TWO() -> u128 { wad_ratio(2, 1) }  // 2.0 in WAD
+    pub fn RAY_ONE_POINT_ONE() -> u128 { ray_ratio(11, 10) }  // 1.1 in RAY
     pub fn RAD_TEN_TO_27() -> Field { 1_000_000_000_000_000_000_000_000_000 }  // 10^27
 
     // wmul helpers
