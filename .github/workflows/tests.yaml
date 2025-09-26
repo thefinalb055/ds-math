@@ -49,8 +49,8 @@ jobs:
       - name: Compile, generate code, and run tests
         run: script -e -c "${AZTEC_NARGO:-aztec-nargo} compile"
 
-      - name: Codegen
-        run: script -e -c "aztec codegen target --outdir src/artifacts && aztec-postprocess-contract"
+      # - name: Codegen
+      #   run: script -e -c "aztec codegen target --outdir src/artifacts && aztec-postprocess-contract"
 
       - name: Change ownership # to get around Docker issues
         run: sudo chown -R $(whoami) ~/nargo && sudo chown -R $(whoami) ~/nargo/github.com

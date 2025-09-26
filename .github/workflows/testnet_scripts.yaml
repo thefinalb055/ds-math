@@ -48,8 +48,8 @@ jobs:
       - name: Compile, generate code, and run tests
         run: script -e -c "${AZTEC_NARGO:-aztec-nargo} compile"
 
-      - name: Codegen
-        run: script -e -c "aztec codegen target --outdir src/artifacts"
+      # - name: Codegen
+      #   run: script -e -c "aztec codegen target --outdir src/artifacts"
 
       - name: Run scripts
         run: script -e -c "bun run deploy && bun run deploy-account && bun run fees && bun run multiple-pxe"
