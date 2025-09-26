@@ -3,6 +3,9 @@
 pub global WAD: u128 = 1_000_000_000_000_000_000;
 pub global RAY: u128 = 1_000_000_000_000_000_000_000_000_000;
 pub global RAD: Field = 1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000;
+pub global U128_MAX: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+pub global U64_MASK: u128 = 0xFFFFFFFFFFFFFFFF;
+pub global U64_BASE: u128 = 0x10000000000000000;
 
 pub global I64_MAX: i64 = 9_223_372_036_854_775_807;
 pub global I64_MIN: i64 = -9_223_372_036_854_775_808;
@@ -124,7 +127,7 @@ pub fn diff(x: u128, y: u128) -> i64 {
 
 pub fn to_rad(wad: u128) -> Field {
     // Convert from WAD (10^18) to RAD (10^45) by multiplying by 10^27
-    let rad_multiplier: Field = 1_000_000_000_000_000_000_000_000_000; // 10^27
+    let rad_multiplier: Field = RAY as Field; // 10^27
     let wad_as_field: Field = wad as Field;
     wad_as_field * rad_multiplier
 }
@@ -138,7 +141,7 @@ pub fn wmul(x: u128, y: u128) -> u128 {
         0
     } else {
         // Check if x * y would overflow u128
-        let max_allowed = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF / y;
+        let max_allowed = U128_MAX / y;
         assert(x <= max_allowed, "wmul overflow");
 
         let product = x * y;
@@ -155,7 +158,7 @@ pub fn wdiv(x: u128, y: u128) -> u128 {
         0
     } else {
         // Check if x * WAD would overflow u128
-        let max_allowed = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF / WAD;
+        let max_allowed = U128_MAX / WAD;
         assert(x <= max_allowed, "wdiv overflow");
 
         let scaled = x * WAD;
@@ -172,7 +175,7 @@ pub fn rmul(x: u128, y: u128) -> u128 {
         0
     } else {
         // Check if x * y would overflow u128
-        let max_allowed = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF / y;
+        let max_allowed = U128_MAX / y;
         assert(x <= max_allowed, "rmul overflow");
 
         let product = x * y;
@@ -189,7 +192,7 @@ pub fn rdiv(x: u128, y: u128) -> u128 {
         0
     } else {
         // Check if x * RAY would overflow u128
-        let max_allowed = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF / RAY;
+        let max_allowed = U128_MAX / RAY;
         assert(x <= max_allowed, "rdiv overflow");
 
         let scaled = x * RAY;
@@ -199,7 +202,7 @@ pub fn rdiv(x: u128, y: u128) -> u128 {
 }
 
 fn mul_wide_u128(a: u128, b: u128) -> (u128, u128) {
-    let base: u128 = 0x100000000; // 2^32
+    let base: u128 = (1 as u128) << 32; // 2^32
     let mask: u128 = base - 1;
 
     let a_limbs: [u128; 4] = [
@@ -248,7 +251,7 @@ fn mul_wide_u128(a: u128, b: u128) -> (u128, u128) {
 }
 
 fn add_wide_u128(hi: u128, lo: u128, addend: u128) -> (u128, u128) {
-    let max_u128: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    let max_u128: u128 = U128_MAX;
     let new_lo = lo + addend;
     let carry = if new_lo < lo { 1 } else { 0 };
     if carry == 1 {
@@ -299,7 +302,7 @@ fn bit_length_u128(mut value: u128) -> u32 {
 }
 
 fn div_wide_u128_single(hi: u128, lo: u128, divisor: u128) -> (u128, u128) {
-    let mask64: u128 = 0xFFFFFFFFFFFFFFFF;
+    let mask64: u128 = U64_MASK;
 
     let mut u_digits: [u128; 4] = [0, 0, 0, 0];
     u_digits[0] = lo & mask64;
@@ -329,7 +332,7 @@ fn div_wide_u128_single(hi: u128, lo: u128, divisor: u128) -> (u128, u128) {
 }
 
 fn normalize_digits(u: [u128; 5], v: [u128; 2], shift: u32) -> ([u128; 5], [u128; 2]) {
-    let mask64: u128 = 0xFFFFFFFFFFFFFFFF;
+    let mask64: u128 = U64_MASK;
     let mut un: [u128; 5] = [0, 0, 0, 0, 0];
     let mut vn: [u128; 2] = [0, 0];
 
@@ -368,8 +371,8 @@ fn denormalize_remainder(un: [u128; 5], shift: u32) -> u128 {
 }
 
 fn div_wide_u128_double(hi: u128, lo: u128, divisor: u128) -> (u128, u128) {
-    let base64: u128 = 0x10000000000000000;
-    let mask64: u128 = 0xFFFFFFFFFFFFFFFF;
+    let base64: u128 = U64_BASE;
+    let mask64: u128 = U64_MASK;
 
     let mut u_digits: [u128; 5] = [0, 0, 0, 0, 0];
     u_digits[0] = lo & mask64;
@@ -495,10 +498,10 @@ fn div_wide_u128_double(hi: u128, lo: u128, divisor: u128) -> (u128, u128) {
 fn div_wide_u128(hi: u128, lo: u128, divisor: u128) -> (u128, u128) {
     assert(divisor != 0, "rpow overflow");
 
-    let high_word = (divisor >> 64) & 0xFFFFFFFFFFFFFFFF;
+    let high_word = (divisor >> 64) & U64_MASK;
 
     if high_word == 0 {
-        div_wide_u128_single(hi, lo, divisor & 0xFFFFFFFFFFFFFFFF)
+        div_wide_u128_single(hi, lo, divisor & U64_MASK)
     } else {
         div_wide_u128_double(hi, lo, divisor)
     }
