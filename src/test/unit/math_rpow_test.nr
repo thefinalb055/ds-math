@@ -41,9 +41,9 @@ mod helpers {
     pub fn TEST_EXPONENT_LARGE() -> u128 { 100 }
     pub fn TEST_EXPONENT_HUGE() -> u128 { 200 }
     pub fn TEST_EXPONENT_VERY_LARGE() -> u128 { 1000 }
-    pub fn RAY_ONE_POINT_ONE() -> u128 { 1100000000000000000000000000 }  // 1.1 in RAY
-    pub fn RAY_ONE_POINT_FIVE() -> u128 { 1500000000000000000000000000 }  // 1.5 in RAY
-    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 { 1001000000000000000000000000 }  // 1.001 in RAY
+    pub fn RAY_ONE_POINT_ONE() -> u128 { RAY + (RAY / 10) }  // 1.1 in RAY
+    pub fn RAY_ONE_POINT_FIVE() -> u128 { RAY + (RAY / 2) }  // 1.5 in RAY
+    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 { RAY + (RAY / 1000) }  // 1.001 in RAY
 
     // Setup for when n is 0
     pub fn setup_n_zero() -> (u128, u128, u128) {
@@ -128,7 +128,7 @@ fn test_rpow_binary_exp_no_overflow() {
     let (x, n, base) = helpers::setup_binary_exp_no_overflow();
     let result = rpow(x, n, base);
 
-    let expected: u128 = 1_210_000_000_000_000_000_000_000_000;
+    let expected: u128 = (RAY * 121) / 100; // 1.21 RAY
     assert_eq(result, expected); // 1.1^2 = 1.21
 }
 
@@ -145,7 +145,7 @@ fn test_rpow_rounding() {
     let (x, n, base) = helpers::setup_rounding();
     let result = rpow(x, n, base);
 
-    let expected: u128 = 3_375_000_000_000_000_000_000_000_000;
+    let expected: u128 = (RAY * 3375) / 1000; // 3.375 RAY
     assert_eq(result, expected); // 1.5^3 = 3.375 -> stays within u128
 }
 

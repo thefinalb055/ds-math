@@ -48,10 +48,10 @@ mod helpers {
     // Test constants to avoid magic numbers
     pub fn TEST_VALUE() -> u128 { 12345 }
     pub fn TEST_VALUE_SMALL() -> u128 { 2 }
-    pub fn WAD_ONE_POINT_FIVE() -> u128 { 1500000000000000000 }  // 1.5 in WAD
-    pub fn WAD_ONE_POINT_THREE() -> u128 { 1333333333333333333 }  // 1.333... in WAD
-    pub fn WAD_TWO() -> u128 { 2000000000000000000 }  // 2.0 in WAD
-    pub fn RAY_ONE_POINT_ONE() -> u128 { 1100000000000000000000000000 }  // 1.1 in RAY
+    pub fn WAD_ONE_POINT_FIVE() -> u128 { WAD + (WAD / 2) }  // 1.5 in WAD
+    pub fn WAD_ONE_POINT_THREE() -> u128 { (WAD * 4) / 3 }  // 1.333... in WAD
+    pub fn WAD_TWO() -> u128 { WAD * 2 }  // 2.0 in WAD
+    pub fn RAY_ONE_POINT_ONE() -> u128 { RAY + (RAY / 10) }  // 1.1 in RAY
     pub fn RAD_TEN_TO_27() -> Field { 1_000_000_000_000_000_000_000_000_000 }  // 10^27
 
     // wmul helpers

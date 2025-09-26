@@ -20,6 +20,7 @@ use crate::test::utils::i64_min_abs;
 // ============ Helper Functions for Branch Conditions ============
 
 mod helpers {
+    use crate::{WAD};
     use crate::test::utils::{max_u128, max_i64, min_i64};
 
     // Test constants to avoid magic numbers
@@ -29,8 +30,8 @@ mod helpers {
     pub fn TEST_NEGATIVE_DELTA() -> i64 { -50 }
     pub fn TEST_TINY_VALUE() -> i64 { 1 }
     pub fn TEST_ARBITRARY_VALUE() -> u128 { 12345 }
-    pub fn TEST_LARGE_VALUE() -> u128 { 10000000000000000000 }  // 10^19
-    pub fn TEST_ETH_LIKE_VALUE() -> u128 { 1000000000000000000 }  // 10^18
+    pub fn TEST_LARGE_VALUE() -> u128 { WAD * 10 }  // 10 WAD
+    pub fn TEST_ETH_LIKE_VALUE() -> u128 { WAD }
 
     // Setup for "When y is positive" with no overflow
     pub fn setup_positive_no_overflow() -> (u128, i64) {
