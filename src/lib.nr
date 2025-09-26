@@ -16,7 +16,7 @@ pub fn add(x: u128, y: i64) -> u128 {
     } else {
         // Special handling for I64_MIN
         let abs_y: u128 = if y == I64_MIN {
-            9223372036854775808  // abs(I64_MIN)
+            (I64_MAX as u128) + 1  // abs(I64_MIN)
         } else {
             let abs_y_i: i64 = 0 - y;
             abs_y_i as u128
@@ -34,7 +34,7 @@ pub fn sub(x: u128, y: i64) -> u128 {
     } else {
         // Special handling for I64_MIN
         let abs_y: u128 = if y == I64_MIN {
-            9223372036854775808  // abs(I64_MIN)
+            (I64_MAX as u128) + 1  // abs(I64_MIN)
         } else {
             let abs_y_i: i64 = 0 - y;
             abs_y_i as u128

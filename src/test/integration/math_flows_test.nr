@@ -37,7 +37,7 @@ mod helpers {
     // Interest accumulation helpers
     pub fn setup_interest_scenario() -> (u128, u128, u128, u128) {
         let principal = ray(1000);  // 1000 DAI in RAY precision
-        let rate = ray(1100000000) / ray(1000000000);  // 1.1 (10% rate)
+        let rate = ray(11) / ray(10);  // 1.1 (10% rate)
         let time = 2;  // 2 years
         let base = RAY;
         (principal, rate, time, base)

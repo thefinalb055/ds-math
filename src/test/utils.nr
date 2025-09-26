@@ -72,14 +72,14 @@ pub fn approx_eq(a: u128, b: u128, tolerance: u128) -> bool {
 // Test data generators for fuzz testing
 pub fn generate_safe_u128_pair() -> (u128, u128) {
     // Returns two u128 values that won't overflow when multiplied
-    let x = 1000000000000000; // 10^15
-    let y = 1000000000000000; // 10^15
+    let x = WAD / 1000; // 10^15
+    let y = WAD / 1000; // 10^15
     (x, y)
 }
 
 pub fn generate_safe_i64() -> i64 {
     // Returns an i64 value safe for most operations
-    1000000
+    (WAD / 1_000_000_000_000) as i64  // 10^6
 }
 
 pub fn generate_boundary_values() -> [u128; 5] {
