@@ -19,7 +19,7 @@ pub fn add(x: u128, y: i64) -> u128 {
     } else {
         // Special handling for I64_MIN
         let abs_y: u128 = if y == I64_MIN {
-            (I64_MAX as u128) + 1  // abs(I64_MIN)
+            (I64_MAX as u128) + 1 // abs(I64_MIN)
         } else {
             let abs_y_i: i64 = 0 - y;
             abs_y_i as u128
@@ -37,7 +37,7 @@ pub fn sub(x: u128, y: i64) -> u128 {
     } else {
         // Special handling for I64_MIN
         let abs_y: u128 = if y == I64_MIN {
-            (I64_MAX as u128) + 1  // abs(I64_MIN)
+            (I64_MAX as u128) + 1 // abs(I64_MIN)
         } else {
             let abs_y_i: i64 = 0 - y;
             abs_y_i as u128
@@ -205,19 +205,9 @@ fn mul_wide_u128(a: u128, b: u128) -> (u128, u128) {
     let base: u128 = (1 as u128) << 32; // 2^32
     let mask: u128 = base - 1;
 
-    let a_limbs: [u128; 4] = [
-        a & mask,
-        (a >> 32) & mask,
-        (a >> 64) & mask,
-        (a >> 96) & mask
-    ];
+    let a_limbs: [u128; 4] = [a & mask, (a >> 32) & mask, (a >> 64) & mask, (a >> 96) & mask];
 
-    let b_limbs: [u128; 4] = [
-        b & mask,
-        (b >> 32) & mask,
-        (b >> 64) & mask,
-        (b >> 96) & mask
-    ];
+    let b_limbs: [u128; 4] = [b & mask, (b >> 32) & mask, (b >> 64) & mask, (b >> 96) & mask];
 
     let mut tmp: [u128; 9] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -237,15 +227,9 @@ fn mul_wide_u128(a: u128, b: u128) -> (u128, u128) {
 
     assert(tmp[8] == 0, "rpow overflow");
 
-    let lo: u128 = tmp[0]
-        | (tmp[1] << 32)
-        | (tmp[2] << 64)
-        | (tmp[3] << 96);
+    let lo: u128 = tmp[0] | (tmp[1] << 32) | (tmp[2] << 64) | (tmp[3] << 96);
 
-    let hi: u128 = tmp[4]
-        | (tmp[5] << 32)
-        | (tmp[6] << 64)
-        | (tmp[7] << 96);
+    let hi: u128 = tmp[4] | (tmp[5] << 32) | (tmp[6] << 64) | (tmp[7] << 96);
 
     (hi, lo)
 }

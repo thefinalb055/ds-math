@@ -32,55 +32,55 @@ use crate::add;
 
 mod helpers {
     use crate::RAY;
-    use crate::test::utils::{wad, ray};
+    use crate::test::utils::{ray, wad};
 
     // Interest accumulation helpers
     pub fn setup_interest_scenario() -> (u128, u128, u128, u128) {
-        let principal = ray(1000);  // 1000 DAI in RAY precision
-        let rate = ray(11) / ray(10);  // 1.1 (10% rate)
-        let time = 2;  // 2 years
+        let principal = ray(1000); // 1000 DAI in RAY precision
+        let rate = ray(11) / ray(10); // 1.1 (10% rate)
+        let time = 2; // 2 years
         let base = RAY;
         (principal, rate, time, base)
     }
 
     // Collateral ratio helpers
     pub fn setup_collateral_ratio() -> (u128, u128, u128) {
-        let collateral_amount = wad(150);  // 150 ETH
-        let eth_price = wad(2000);  // $2000 per ETH
-        let debt = wad(200000);  // $200,000 DAI
+        let collateral_amount = wad(150); // 150 ETH
+        let eth_price = wad(2000); // $2000 per ETH
+        let debt = wad(200000); // $200,000 DAI
         (collateral_amount, eth_price, debt)
     }
 
     // Fee calculation helpers
     pub fn setup_fee_scenario() -> (u128, u128) {
-        let amount = wad(10000);  // 10,000 DAI
-        let fee_rate = wad(3) / 1000;  // 0.3% = 0.003 in WAD
+        let amount = wad(10000); // 10,000 DAI
+        let fee_rate = wad(3) / 1000; // 0.3% = 0.003 in WAD
         (amount, fee_rate)
     }
 
     // Precision conversion helpers
     pub fn setup_precision_conversion() -> u128 {
-        wad(100)  // 100 in WAD precision
+        wad(100) // 100 in WAD precision
     }
 
     // Safe arithmetic helpers
     pub fn setup_safe_arithmetic() -> (u128, i64, i64, i64) {
-        (1000, 500, -300, -50)  // initial, deposit, withdrawal, fee
+        (1000, 500, -300, -50) // initial, deposit, withdrawal, fee
     }
 
     // Liquidation check helpers
     pub fn setup_liquidation_check() -> (u128, u128, u128, u128) {
-        let collateral = wad(100);  // 100 ETH
-        let eth_price = wad(1500);  // $1500 per ETH
-        let debt = wad(100000);  // $100,000 DAI
-        let liquidation_threshold = wad(1500000000000000000);  // 150% in WAD
+        let collateral = wad(100); // 100 ETH
+        let eth_price = wad(1500); // $1500 per ETH
+        let debt = wad(100000); // $100,000 DAI
+        let liquidation_threshold = wad(1500000000000000000); // 150% in WAD
         (collateral, eth_price, debt, liquidation_threshold)
     }
 
     // Multi-period compound interest helpers
     pub fn setup_multi_period() -> (u128, u128, u128, u128) {
         let principal = ray(1000);
-        let monthly_rate = ray(1008333333);  // ~0.833% monthly = 10% annual
+        let monthly_rate = ray(1008333333); // ~0.833% monthly = 10% annual
         let periods = 12;
         let base = RAY;
         (principal, monthly_rate, periods, base)

@@ -18,7 +18,7 @@
 //     |-- Sign changes at boundaries
 //     `-- Precision loss at extremes
 
-use crate::{add, sub, mul, wmul, wdiv, rmul, rdiv, WAD, I64_MAX, I64_MIN};
+use crate::{add, I64_MAX, I64_MIN, mul, rdiv, rmul, sub, WAD, wdiv, wmul};
 
 // ============ Helper Functions for Overflow Detection ============
 
@@ -46,7 +46,7 @@ mod helpers {
 
     // Generate a value that's likely to cause underflow
     pub fn make_underflow_prone(x: u128) -> u128 {
-        x & 0xFFFF  // Keep it small
+        x & 0xFFFF // Keep it small
     }
 
     // Adjust value for multiplication overflow testing
@@ -55,7 +55,11 @@ mod helpers {
             x & 0xFFFF
         } else if y == I64_MIN {
             // Only 0 and 1 are safe with I64_MIN
-            if x > 1 { 2 } else { x }
+            if x > 1 {
+                2
+            } else {
+                x
+            }
         } else if (y > 1000000) | (y < -1000000) {
             // For large y, keep x reasonable
             (I64_MAX as u128) / 2
@@ -214,15 +218,15 @@ fn fuzz_detect_precision_loss(x: u128, divisor: u128) {
 fn fuzz_boundary_transitions(x: u128, offset: u8) {
     // Test behavior at various boundaries
     let boundaries = [
-        0,                                    // Zero boundary
-        1,                                    // Minimum positive
-        WAD - 1,                             // Just under WAD
-        WAD,                                 // Exactly WAD
-        WAD + 1,                             // Just over WAD
-        (I64_MAX as u128) - 1,              // Just under I64_MAX
-        (I64_MAX as u128),                  // Exactly I64_MAX
-        (I64_MAX as u128) + 1,              // Just over I64_MAX
-        helpers::max_u128() - 256,          // Near max with room for offset
+        0, // Zero boundary
+        1, // Minimum positive
+        WAD - 1, // Just under WAD
+        WAD, // Exactly WAD
+        WAD + 1, // Just over WAD
+        (I64_MAX as u128) - 1, // Just under I64_MAX
+        (I64_MAX as u128), // Exactly I64_MAX
+        (I64_MAX as u128) + 1, // Just over I64_MAX
+        helpers::max_u128() - 256, // Near max with room for offset
     ];
 
     // Pick a boundary based on x mod array length

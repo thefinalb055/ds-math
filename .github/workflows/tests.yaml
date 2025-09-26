@@ -1,0 +1,142 @@
+name: Run Tests and Scripts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  setup-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: "1.2.20"
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Install Aztec CLI
+        run: |
+          curl -s https://install.aztec.network > tmp.sh
+          bash tmp.sh <<< yes "yes"
+
+      - name: Update path
+        run: echo "/home/runner/.aztec/bin" >> $GITHUB_PATH
+
+      - name: Set Aztec version and start sandbox
+        run: |
+          VERSION=2.0.2 aztec-up
+          aztec start --sandbox &
+
+      - name: Install project dependencies
+        run: bun install
+
+      - name: Compile, generate code, and run tests
+        run: script -e -c "${AZTEC_NARGO:-aztec-nargo} compile"
+
+      - name: Codegen
+        run: script -e -c "aztec codegen target --outdir src/artifacts && aztec-postprocess-contract"
+
+      - name: Change ownership # to get around Docker issues
+        run: sudo chown -R $(whoami) ~/nargo && sudo chown -R $(whoami) ~/nargo/github.com
+
+      - name: Run tests
+        run: script -e -c "bun run test"
+
+      - name: Deploy account and capture SECRET/SIGNING_KEY/SALT
+        run: |
+          script -e -c "bun run clear-store"
+          # Create a temporary file to store the output
+          TEMP_OUTPUT=$(mktemp)
+
+          # Run deploy-account script and capture both stdout and stderr
+          if script -e -c "bun run deploy-account" > "$TEMP_OUTPUT" 2>&1; then
+            echo "✅ Deploy account script completed successfully"
+          else
+            echo "❌ Deploy account script failed"
+            cat "$TEMP_OUTPUT"
+            rm "$TEMP_OUTPUT"
+            exit 1
+          fi
+
+          # Show the full output for debugging
+          cat "$TEMP_OUTPUT"
+
+          # Extract SECRET, SIGNING_KEY, and SALT from the output
+          SECRET_KEY=$(grep -o "🔑 Secret key generated: 0x[a-fA-F0-9]*" "$TEMP_OUTPUT" | head -1 | sed 's/🔑 Secret key generated: //' || echo "")
+          SIGNING_KEY=$(grep -o "🖊️ Signing key generated: 0x[a-fA-F0-9]*" "$TEMP_OUTPUT" | head -1 | sed 's/🖊️ Signing key generated: //' || echo "")
+          SALT_VALUE=$(grep -o "🧂 Salt generated: 0x[a-fA-F0-9]*" "$TEMP_OUTPUT" | head -1 | sed 's/🧂 Salt generated: //' || echo "")
+
+          # Clean up temp file
+          rm "$TEMP_OUTPUT"
+
+          # Validate and create .env file
+          if [ -n "$SECRET_KEY" ] && [ -n "$SIGNING_KEY" ] && [ -n "$SALT_VALUE" ]; then
+            
+            # Create .env file with all necessary values
+            echo "SECRET=\"$SECRET_KEY\"" >> .env
+            echo "SIGNING_KEY=\"$SIGNING_KEY\"" >> .env
+            echo "SALT=\"$SALT_VALUE\"" >> .env
+            echo "📋 Current .env file contents:"
+            cat .env
+          else
+            echo "❌ Failed to extract SECRET, SIGNING_KEY and/or SALT from deploy output"
+            echo "🔍 SECRET_KEY: '$SECRET_KEY'"
+            echo "🔍 SIGNING_KEY: '$SIGNING_KEY'"
+            echo "🔍 SALT_VALUE: '$SALT_VALUE'"
+            exit 1
+          fi
+
+      - name: Deploy contract and capture address
+        run: |
+          # Create a temporary file to store the output
+          TEMP_OUTPUT=$(mktemp)
+
+          # Run deploy script and capture both stdout and stderr
+          if script -e -c "bun run deploy" > "$TEMP_OUTPUT" 2>&1; then
+            echo "✅ Deploy script completed successfully"
+          else
+            cat "$TEMP_OUTPUT"
+            rm "$TEMP_OUTPUT"
+            exit 1
+          fi
+
+          # Show the full output for debugging
+          cat "$TEMP_OUTPUT"
+
+          # Try multiple extraction patterns in order of preference
+          VOTING_CONTRACT_ADDRESS=""
+
+          # Look for "Contract address:" pattern
+          if [ -z "$VOTING_CONTRACT_ADDRESS" ]; then
+            VOTING_CONTRACT_ADDRESS=$(grep -o "Contract address: 0x[a-fA-F0-9]*" "$TEMP_OUTPUT" | head -1 | sed 's/Contract address: //' || echo "")
+          fi
+
+          # Clean up temp file
+          rm "$TEMP_OUTPUT"
+
+          # Validate and save the address
+          if [ -n "$VOTING_CONTRACT_ADDRESS" ]; then
+            echo "VOTING_CONTRACT_ADDRESS=\"$VOTING_CONTRACT_ADDRESS\"" >> .env
+          fi
+
+      - name: Run other scripts
+        run: |
+          script -e -c "bun run fees"
+          script -e -c "bun run multiple-pxe"
+          script -e -c "bun run interaction-existing-contract"

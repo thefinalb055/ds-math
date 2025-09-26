@@ -30,7 +30,7 @@
 //     `-- When difference magnitude exceeds |I64_MIN|
 //         `-- It should revert with "diff overflow"
 
-use crate::{min, max, diff};
+use crate::{diff, max, min};
 
 // ============ Helper Functions for Branch Conditions ============
 
@@ -38,9 +38,15 @@ mod helpers {
     use crate::test::utils::i64_min_abs;
 
     // Test constants to avoid magic numbers
-    pub fn TEST_BASE_VALUE() -> u128 { 100 }
-    pub fn TEST_SMALL_VALUE() -> u128 { 50 }
-    pub fn TEST_OFFSET() -> u128 { 100 }
+    pub fn TEST_BASE_VALUE() -> u128 {
+        100
+    }
+    pub fn TEST_SMALL_VALUE() -> u128 {
+        50
+    }
+    pub fn TEST_OFFSET() -> u128 {
+        100
+    }
 
     // min helpers
     pub fn setup_min_equal() -> (u128, u128) {

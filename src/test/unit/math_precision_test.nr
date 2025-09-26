@@ -37,22 +37,36 @@
 // `-- When wad * 10^27 does not overflow Field
 //     `-- It should return wad * 10^27 as Field
 
-use crate::{WAD, RAY, RAD, wmul, wdiv, rmul, rdiv, to_rad};
+use crate::{RAD, RAY, rdiv, rmul, to_rad, WAD, wdiv, wmul};
 
 // ============ Helper Functions for Branch Conditions ============
 
 mod helpers {
-    use crate::{WAD, RAY};
-    use crate::test::utils::{max_u128, wad_ratio, ray_ratio};
+    use crate::{RAY, WAD};
+    use crate::test::utils::{max_u128, ray_ratio, wad_ratio};
 
     // Test constants to avoid magic numbers
-    pub fn TEST_VALUE() -> u128 { 12345 }
-    pub fn TEST_VALUE_SMALL() -> u128 { 2 }
-    pub fn WAD_ONE_POINT_FIVE() -> u128 { wad_ratio(3, 2) }  // 1.5 in WAD
-    pub fn WAD_ONE_POINT_THREE() -> u128 { wad_ratio(4, 3) }  // 1.333... in WAD
-    pub fn WAD_TWO() -> u128 { wad_ratio(2, 1) }  // 2.0 in WAD
-    pub fn RAY_ONE_POINT_ONE() -> u128 { ray_ratio(11, 10) }  // 1.1 in RAY
-    pub fn RAD_TEN_TO_27() -> Field { 1_000_000_000_000_000_000_000_000_000 }  // 10^27
+    pub fn TEST_VALUE() -> u128 {
+        12345
+    }
+    pub fn TEST_VALUE_SMALL() -> u128 {
+        2
+    }
+    pub fn WAD_ONE_POINT_FIVE() -> u128 {
+        wad_ratio(3, 2)
+    } // 1.5 in WAD
+    pub fn WAD_ONE_POINT_THREE() -> u128 {
+        wad_ratio(4, 3)
+    } // 1.333... in WAD
+    pub fn WAD_TWO() -> u128 {
+        wad_ratio(2, 1)
+    } // 2.0 in WAD
+    pub fn RAY_ONE_POINT_ONE() -> u128 {
+        ray_ratio(11, 10)
+    } // 1.1 in RAY
+    pub fn RAD_TEN_TO_27() -> Field {
+        1_000_000_000_000_000_000_000_000_000
+    } // 10^27
 
     // wmul helpers
     pub fn setup_wmul_zero() -> [(u128, u128); 2] {
@@ -60,11 +74,11 @@ mod helpers {
     }
 
     pub fn setup_wmul_exact() -> (u128, u128) {
-        (WAD, TEST_VALUE_SMALL())  // WAD * 2 / WAD = 2 (exact)
+        (WAD, TEST_VALUE_SMALL()) // WAD * 2 / WAD = 2 (exact)
     }
 
     pub fn setup_wmul_rounds_down() -> (u128, u128) {
-        (WAD_ONE_POINT_FIVE(), WAD_ONE_POINT_THREE())  // 1.5 * 1.333... rounds down
+        (WAD_ONE_POINT_FIVE(), WAD_ONE_POINT_THREE()) // 1.5 * 1.333... rounds down
     }
 
     pub fn setup_wmul_overflow() -> (u128, u128) {
@@ -81,7 +95,7 @@ mod helpers {
     }
 
     pub fn setup_wdiv_exact() -> (u128, u128) {
-        (TEST_VALUE_SMALL(), TEST_VALUE_SMALL())  // 2 * WAD / 2 = WAD
+        (TEST_VALUE_SMALL(), TEST_VALUE_SMALL()) // 2 * WAD / 2 = WAD
     }
 
     // rmul helpers
@@ -90,7 +104,7 @@ mod helpers {
     }
 
     pub fn setup_rmul_no_overflow() -> (u128, u128) {
-        (RAY, TEST_VALUE_SMALL())  // RAY * 2 / RAY = 2
+        (RAY, TEST_VALUE_SMALL()) // RAY * 2 / RAY = 2
     }
 
     // rdiv helpers
@@ -99,7 +113,7 @@ mod helpers {
     }
 
     pub fn setup_rdiv_no_overflow() -> (u128, u128) {
-        (TEST_VALUE_SMALL(), TEST_VALUE_SMALL())  // 2 * RAY / 2 = RAY
+        (TEST_VALUE_SMALL(), TEST_VALUE_SMALL()) // 2 * RAY / 2 = RAY
     }
 
     // to_rad helpers
@@ -108,11 +122,11 @@ mod helpers {
     }
 
     pub fn setup_to_rad_conversion() -> u128 {
-        1  // Will convert to 10^27
+        1 // Will convert to 10^27
     }
 
     pub fn setup_to_rad_wad() -> u128 {
-        WAD  // Will convert to RAD
+        WAD // Will convert to RAD
     }
 }
 
@@ -137,7 +151,7 @@ fn test_wmul_exact() {
 
     let result = wmul(x, y);
 
-    assert_eq(result, helpers::TEST_VALUE_SMALL());  // WAD * 2 / WAD = 2
+    assert_eq(result, helpers::TEST_VALUE_SMALL()); // WAD * 2 / WAD = 2
 }
 
 #[test]
@@ -186,7 +200,7 @@ fn test_wdiv_exact() {
 
     let result = wdiv(x, y);
 
-    assert_eq(result, WAD);  // 2 * WAD / 2 = WAD
+    assert_eq(result, WAD); // 2 * WAD / 2 = WAD
 }
 
 // ============ rmul tests ============
@@ -210,7 +224,7 @@ fn test_rmul_no_overflow() {
 
     let result = rmul(x, y);
 
-    assert_eq(result, helpers::TEST_VALUE_SMALL());  // RAY * 2 / RAY = 2
+    assert_eq(result, helpers::TEST_VALUE_SMALL()); // RAY * 2 / RAY = 2
 }
 
 // ============ rdiv tests ============
@@ -230,7 +244,7 @@ fn test_rdiv_no_overflow() {
 
     let result = rdiv(x, y);
 
-    assert_eq(result, RAY);  // 2 * RAY / 2 = RAY
+    assert_eq(result, RAY); // 2 * RAY / 2 = RAY
 }
 
 // ============ to_rad tests ============

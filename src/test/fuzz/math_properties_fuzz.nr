@@ -21,7 +21,7 @@
 //     |-- Safe operations within bounds
 //     `-- Controlled failure at boundaries
 
-use crate::{add, sub, mul, min, max, wmul, wdiv, rmul, WAD, RAY, I64_MAX};
+use crate::{add, I64_MAX, max, min, mul, RAY, rmul, sub, WAD, wdiv, wmul};
 
 // ============ Helper Functions for Property Validation ============
 
@@ -43,7 +43,7 @@ mod helpers {
     // Check if multiplication would overflow
     pub fn is_safe_for_mul(x: u128, y: i64) -> bool {
         if y == 0 {
-            x <= (I64_MAX as u128)  // x must be valid for mul even with 0
+            x <= (I64_MAX as u128) // x must be valid for mul even with 0
         } else if y == I64_MIN {
             x <= 1
         } else {

@@ -23,7 +23,7 @@
 //     `-- When x * |y| would overflow I64_MAX + 1
 //         `-- It should revert with "mul overflow"
 
-use crate::{mul, I64_MIN};
+use crate::{I64_MIN, mul};
 
 // ============ Helper Functions for Branch Conditions ============
 
@@ -31,13 +31,27 @@ mod helpers {
     use crate::{I64_MAX, I64_MIN, WAD};
 
     // Test constants to avoid magic numbers
-    pub fn TEST_VALUE_LARGE() -> u128 { 123456789 }
-    pub fn TEST_VALUE_SMALL() -> u128 { 1000 }
-    pub fn TEST_VALUE_MEDIUM() -> u128 { 1_000_000_000 }
-    pub fn TEST_MULTIPLIER_SMALL() -> i64 { 2 }
-    pub fn TEST_MULTIPLIER_LARGE() -> i64 { 2000 }
-    pub fn TEST_EXPECTED_PRODUCT() -> i64 { 2000000 }
-    pub fn TEST_EXPECTED_LARGE_PRODUCT() -> i64 { WAD as i64 }
+    pub fn TEST_VALUE_LARGE() -> u128 {
+        123456789
+    }
+    pub fn TEST_VALUE_SMALL() -> u128 {
+        1000
+    }
+    pub fn TEST_VALUE_MEDIUM() -> u128 {
+        1_000_000_000
+    }
+    pub fn TEST_MULTIPLIER_SMALL() -> i64 {
+        2
+    }
+    pub fn TEST_MULTIPLIER_LARGE() -> i64 {
+        2000
+    }
+    pub fn TEST_EXPECTED_PRODUCT() -> i64 {
+        2000000
+    }
+    pub fn TEST_EXPECTED_LARGE_PRODUCT() -> i64 {
+        WAD as i64
+    }
 
     // Setup for "When y is zero"
     pub fn setup_y_zero() -> (u128, i64) {

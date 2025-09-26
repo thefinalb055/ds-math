@@ -1,4 +1,4 @@
-use crate::{WAD, RAY, I64_MAX, I64_MIN};
+use crate::{I64_MAX, I64_MIN, RAY, WAD};
 
 // --- generated start ---
 // Test utilities for Math library tests
@@ -35,7 +35,7 @@ pub fn min_i64() -> i64 {
 }
 
 pub fn i64_min_abs() -> u128 {
-    (I64_MAX as u128) + 1  // abs(I64_MIN)
+    (I64_MAX as u128) + 1 // abs(I64_MIN)
 }
 
 // Helper to create WAD-scaled values
@@ -79,16 +79,10 @@ pub fn generate_safe_u128_pair() -> (u128, u128) {
 
 pub fn generate_safe_i64() -> i64 {
     // Returns an i64 value safe for most operations
-    (WAD / 1_000_000_000_000) as i64  // 10^6
+    (WAD / 1_000_000_000_000) as i64 // 10^6
 }
 
 pub fn generate_boundary_values() -> [u128; 5] {
-    [
-        0,
-        1,
-        WAD,
-        near_max_u128() / 2,
-        near_max_u128()
-    ]
+    [0, 1, WAD, near_max_u128() / 2, near_max_u128()]
 }
 // --- generated end ---

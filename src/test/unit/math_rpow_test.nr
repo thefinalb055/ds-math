@@ -26,8 +26,7 @@
 //     `-- When base is at boundary values
 //         `-- It should handle correctly
 
-
-use crate::{rpow, RAY};
+use crate::{RAY, rpow};
 use crate::test::utils::approx_eq;
 
 // ============ Helper Functions for Branch Conditions ============
@@ -37,18 +36,34 @@ mod helpers {
     use crate::test::utils::ray_ratio;
 
     // Test constants to avoid magic numbers
-    pub fn TEST_EXPONENT_SMALL() -> u128 { 2 }
-    pub fn TEST_EXPONENT_MEDIUM() -> u128 { 5 }
-    pub fn TEST_EXPONENT_LARGE() -> u128 { 100 }
-    pub fn TEST_EXPONENT_HUGE() -> u128 { 200 }
-    pub fn TEST_EXPONENT_VERY_LARGE() -> u128 { 1000 }
-    pub fn RAY_ONE_POINT_ONE() -> u128 { ray_ratio(11, 10) }  // 1.1 in RAY
-    pub fn RAY_ONE_POINT_FIVE() -> u128 { ray_ratio(3, 2) }  // 1.5 in RAY
-    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 { ray_ratio(1001, 1000) }  // 1.001 in RAY
+    pub fn TEST_EXPONENT_SMALL() -> u128 {
+        2
+    }
+    pub fn TEST_EXPONENT_MEDIUM() -> u128 {
+        5
+    }
+    pub fn TEST_EXPONENT_LARGE() -> u128 {
+        100
+    }
+    pub fn TEST_EXPONENT_HUGE() -> u128 {
+        200
+    }
+    pub fn TEST_EXPONENT_VERY_LARGE() -> u128 {
+        1000
+    }
+    pub fn RAY_ONE_POINT_ONE() -> u128 {
+        ray_ratio(11, 10)
+    } // 1.1 in RAY
+    pub fn RAY_ONE_POINT_FIVE() -> u128 {
+        ray_ratio(3, 2)
+    } // 1.5 in RAY
+    pub fn RAY_ONE_POINT_ZERO_ZERO_ONE() -> u128 {
+        ray_ratio(1001, 1000)
+    } // 1.001 in RAY
 
     // Setup for when n is 0
     pub fn setup_n_zero() -> (u128, u128, u128) {
-        (TEST_EXPONENT_SMALL() * RAY, 0, RAY)  // x, n, base
+        (TEST_EXPONENT_SMALL() * RAY, 0, RAY) // x, n, base
     }
 
     // Setup for when n is 1
@@ -68,22 +83,22 @@ mod helpers {
 
     // Setup for binary exponentiation without overflow
     pub fn setup_binary_exp_no_overflow() -> (u128, u128, u128) {
-        (RAY_ONE_POINT_ONE(), TEST_EXPONENT_SMALL(), RAY)  // 1.1^2 in RAY
+        (RAY_ONE_POINT_ONE(), TEST_EXPONENT_SMALL(), RAY) // 1.1^2 in RAY
     }
 
     // Setup for binary exponentiation with overflow
     pub fn setup_binary_exp_overflow() -> (u128, u128, u128) {
-        (TEST_EXPONENT_SMALL() * RAY, TEST_EXPONENT_HUGE(), RAY)  // 2^200 will overflow
+        (TEST_EXPONENT_SMALL() * RAY, TEST_EXPONENT_HUGE(), RAY) // 2^200 will overflow
     }
 
     // Setup for result that needs rounding
     pub fn setup_rounding() -> (u128, u128, u128) {
-        (RAY_ONE_POINT_FIVE(), 3, RAY)  // 1.5^3 in RAY
+        (RAY_ONE_POINT_FIVE(), 3, RAY) // 1.5^3 in RAY
     }
 
     // Setup for large exponent edge case
     pub fn setup_large_exponent() -> (u128, u128, u128) {
-        (RAY_ONE_POINT_ZERO_ZERO_ONE(), TEST_EXPONENT_VERY_LARGE(), RAY)  // 1.001^1000 in RAY
+        (RAY_ONE_POINT_ZERO_ZERO_ONE(), TEST_EXPONENT_VERY_LARGE(), RAY) // 1.001^1000 in RAY
     }
 }
 

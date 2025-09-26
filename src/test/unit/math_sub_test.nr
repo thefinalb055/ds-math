@@ -19,18 +19,34 @@ use crate::sub;
 // ============ Helper Functions for Branch Conditions ============
 
 mod helpers {
+    use crate::test::utils::{max_i64, max_u128, min_i64};
     use crate::WAD;
-    use crate::test::utils::{max_u128, max_i64, min_i64};
 
     // Test constants to avoid magic numbers
-    pub fn TEST_BASE_VALUE() -> u128 { 100 }
-    pub fn TEST_SMALL_VALUE() -> u128 { 30 }
-    pub fn TEST_POSITIVE_DELTA() -> i64 { 50 }
-    pub fn TEST_NEGATIVE_DELTA() -> i64 { -50 }
-    pub fn TEST_TINY_VALUE() -> i64 { 1 }
-    pub fn TEST_ARBITRARY_VALUE() -> u128 { 12345 }
-    pub fn TEST_LARGE_VALUE() -> u128 { WAD * 10 }  // 10 WAD
-    pub fn TEST_BOUNDARY_OFFSET() -> u128 { 1000 }
+    pub fn TEST_BASE_VALUE() -> u128 {
+        100
+    }
+    pub fn TEST_SMALL_VALUE() -> u128 {
+        30
+    }
+    pub fn TEST_POSITIVE_DELTA() -> i64 {
+        50
+    }
+    pub fn TEST_NEGATIVE_DELTA() -> i64 {
+        -50
+    }
+    pub fn TEST_TINY_VALUE() -> i64 {
+        1
+    }
+    pub fn TEST_ARBITRARY_VALUE() -> u128 {
+        12345
+    }
+    pub fn TEST_LARGE_VALUE() -> u128 {
+        WAD * 10
+    } // 10 WAD
+    pub fn TEST_BOUNDARY_OFFSET() -> u128 {
+        1000
+    }
 
     // Setup for "When y is positive" with no underflow
     pub fn setup_positive_no_underflow() -> (u128, i64) {
