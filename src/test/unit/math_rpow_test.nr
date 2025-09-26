@@ -26,7 +26,6 @@
 //     `-- When base is at boundary values
 //         `-- It should handle correctly
 
-use crate::{RAY};
 
 // TODO: Import function once implemented
 // use crate::rpow;

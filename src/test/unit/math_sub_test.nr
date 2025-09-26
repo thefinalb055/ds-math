@@ -14,8 +14,7 @@
 // `-- When y is zero
 //     `-- It should return x unchanged
 
-use crate::{sub, I64_MAX, I64_MIN};
-use crate::test::utils::{max_u128, near_max_u128};
+use crate::sub;
 
 // ============ Helper Functions for Branch Conditions ============
 

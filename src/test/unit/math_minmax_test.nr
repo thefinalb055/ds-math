@@ -30,7 +30,6 @@
 //     `-- When difference magnitude exceeds |I64_MIN|
 //         `-- It should revert with "diff overflow"
 
-use crate::{I64_MAX, I64_MIN};
 use crate::{min, max};
 // TODO: Import diff once implemented
 // use crate::diff;

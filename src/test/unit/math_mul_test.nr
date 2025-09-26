@@ -23,8 +23,7 @@
 //     `-- When x * |y| would overflow I64_MAX + 1
 //         `-- It should revert with "mul overflow"
 
-use crate::{mul, I64_MAX, I64_MIN};
-use crate::test::utils::{max_i64, min_i64};
+use crate::{mul, I64_MIN};
 
 // ============ Helper Functions for Branch Conditions ============
 

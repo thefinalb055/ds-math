@@ -206,6 +206,91 @@ fn test_fuzz_property() {
 
 See `math_add_test.nr` for a complete example following all these patterns.
 
+## Fuzz Testing Guidelines
+
+Noir includes a powerful fuzzer for property-based testing and finding edge cases. Fuzz tests use the `#[fuzz]` attribute and let the fuzzer generate test inputs automatically.
+
+### When to Use Fuzz Tests vs Regular Tests
+
+**Use Fuzz Tests (`#[fuzz]`) for:**
+- Testing mathematical properties that should hold for ALL inputs
+- Finding edge cases and boundary conditions automatically
+- Detecting overflow/underflow conditions
+- Verifying precision guarantees across random inputs
+- Differential testing against oracles
+
+**Use Regular Tests (`#[test]`) for:**
+- Known edge cases and regression tests
+- Specific scenarios with expected outputs
+- Integration tests with complex setup
+- Deterministic property verification
+
+### Fuzz Test Structure
+
+```noir
+#[fuzz]
+fn fuzz_property_name(x: u128, y: i64) {
+    // Fuzzer will generate x and y values
+    // Test a property that should always hold
+    assert(some_property(x, y));
+}
+
+#[fuzz(should_fail_with = "overflow")]
+fn fuzz_find_overflow(x: u128, y: i64) {
+    // Fuzzer will try to find inputs that cause overflow
+    let _result = add(x, y);
+}
+
+#[fuzz(only_fail_with = "specific error")]
+fn fuzz_specific_failure(x: u128) {
+    // Only interested in one specific failure mode
+    // Other failures are ignored
+}
+```
+
+### Fuzz Test Helpers
+
+Create helper functions for:
+- **Boundary checks**: `is_safe_for_operation(x, y)`
+- **Property validation**: `check_invariant(result)`
+- **Input transformation**: `make_overflow_prone(x)`
+
+### Naming Convention
+
+- **Fuzz test functions**: `fuzz_<property>_<condition>`
+- **Property validators**: `check_<property>`
+- **Safety checkers**: `is_safe_for_<operation>`
+- **Files**:
+  - `*_fuzz.nr` for actual fuzz tests
+  - `*_test.nr` for deterministic tests
+
+### Running Fuzz Tests
+
+```bash
+# Run all fuzz tests
+nargo fuzz
+
+# Run specific fuzz harness
+nargo fuzz fuzz_add_overflow
+
+# Run with custom timeout (seconds)
+nargo fuzz --timeout 60
+
+# Run with multiple threads
+nargo fuzz --num-threads 4
+
+# Save corpus for regression testing
+nargo fuzz --corpus-dir ./fuzz-corpus
+```
+
+### Best Practices
+
+1. **Keep fuzz tests focused** - Test one property at a time
+2. **Use helper functions** - Extract complex property checks
+3. **Transform inputs when needed** - Guide the fuzzer toward interesting cases
+4. **Document the property** - Clearly state what invariant is being tested
+5. **Combine with regular tests** - Use both approaches for comprehensive coverage
+
 ## Maintenance
 
 When updating tests:
@@ -213,3 +298,5 @@ When updating tests:
 2. Ensure helper functions remain aligned with their conditions
 3. Keep fixture functions general and reusable
 4. Document any new patterns discovered
+5. Run fuzz tests periodically to find new edge cases
+6. Add interesting fuzz findings as regression tests

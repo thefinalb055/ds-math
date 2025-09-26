@@ -14,6 +14,10 @@
 		"codegen": "aztec codegen target --outdir src/artifacts",
 		"compile": "${AZTEC_NARGO:-aztec-nargo} compile && aztec-postprocess-contract",
 		"test": "aztec test",
+		"fuzz": "./scripts/fuzz.sh",
+		"fuzz:quick": "./scripts/fuzz.sh --quick",
+		"fuzz:thorough": "./scripts/fuzz.sh --thorough",
+		"fuzz:list": "./scripts/fuzz.sh --list",
 		"build": "tsdown",
 		"update": "aztec update --contract . && ./.github/scripts/update_contract.sh $(grep -oP 'tag\\s*=\\s*\"\\K[^\"]+' \"Nargo.toml\" | head -1) && bun install && bun update-readme-version",
 		"update-readme-version": "bun run ./.github/scripts/update-readme-version.js"

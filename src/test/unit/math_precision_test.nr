@@ -38,7 +38,6 @@
 //     `-- It should return wad * 10^27 as Field
 
 use crate::{WAD, RAY, RAD, wmul, wdiv, rmul, rdiv, to_rad};
-use crate::test::utils::{max_u128, near_max_u128};
 
 // ============ Helper Functions for Branch Conditions ============
 

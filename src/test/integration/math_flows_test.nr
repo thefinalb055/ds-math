@@ -23,8 +23,7 @@
 //     |-- When compounding over multiple periods
 //     |   `-- It should calculate correct final amount
 
-use crate::{add, sub, mul, WAD, RAY, I64_MAX};
-use crate::test::utils::{wad, ray, approx_eq};
+use crate::add;
 
 // TODO: Import precision functions once implemented
 // use crate::{wmul, wdiv, rmul, rdiv, rpow, to_rad};
@@ -32,7 +31,7 @@ use crate::test::utils::{wad, ray, approx_eq};
 // ============ Helper Functions for Complex Flows ============
 
 mod helpers {
-    use crate::{WAD, RAY};
+    use crate::RAY;
     use crate::test::utils::{wad, ray};
 
     // Interest accumulation helpers
